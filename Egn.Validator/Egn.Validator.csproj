@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Authors>Rumen Novachkov</Authors>
+    <PackageId>Bulgarian.Egn.Validator</PackageId>
+    <Product>EgnValidator</Product>
+    <Description>Library for validation of the Bulgarian personal Identification numbers,
+with one static method Egn.isValid(string egn) and one ValidationAttribute [EGN]</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>Bulgaria, Bulgarian, Identification, Number, Personal, Attribute, Egn</PackageTags>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+</Project>
