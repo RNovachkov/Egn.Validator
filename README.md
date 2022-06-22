@@ -1,7 +1,7 @@
 # Egn.Validator
 ##### Simple project for Bulgarian personal Identification number validation on C Sharp
 
-This project is basicly traslated php project from [ Georgi Chorbadzhiyski](https://georgi.unixsol.org " Georgi Chorbadzhiyski"), for the original project [click here](https://georgi.unixsol.org/programs/egn.php "click here")
+This project is basically translated php project from [ Georgi Chorbadzhiyski](https://georgi.unixsol.org " Georgi Chorbadzhiyski"), for the original project [click here](https://georgi.unixsol.org/programs/egn.php "click here")
 You can find the information, about how the validation is processed in [Wikipedia](https://bg.wikipedia.org/wiki/Единен_граждански_номер "Wikipedia") as well
 
 ------------
