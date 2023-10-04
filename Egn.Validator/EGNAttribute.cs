@@ -17,7 +17,7 @@ namespace Egn.Validator
 
                 if (!string.IsNullOrEmpty(currentFieldValue))
                 {
-                    if (currentFieldValue.Length != 10 || !Regex.IsMatch(currentFieldValue, @"\d{10}"))
+                    if (currentFieldValue.Length != 10 || !Regex.IsMatch(currentFieldValue, @"^[0-9]{10}$"))
                     {
                         return ReturnError(validationContext);
                     }
@@ -27,32 +27,25 @@ namespace Egn.Validator
                     var day = int.Parse(currentFieldValue.Substring(4, 2));
                     if (month > 40)
                     {
-                        if (!CheckDate(day, month - 40, year))
-                        {
-                            return ReturnError(validationContext);
-                        }
+                        month -= 40;
+                        year += 2000;
                     }
                     else if (month > 20)
                     {
-                        if (!CheckDate(day, month - 20, year))
-                        {
-                            return ReturnError(validationContext);
-                        }
+                        month -= 20;
+                        year += 1800;
                     }
-                    else if (!CheckDate(day, month, year))
+                    else
+                    {
+                        year += 1900;
+                    }
+
+                    if (!CheckDate(day, month, year))
                     {
                         return ReturnError(validationContext);
                     }
 
-                    var checksum = int.Parse(currentFieldValue.Substring(9, 1));
-                    var egnSum = 0;
-                    for (int i = 0; i < 9; i++)
-                    {
-                        egnSum += int.Parse(currentFieldValue.Substring(i, 1)) * _weights[i];
-                    }
-                    var validChecksum = egnSum % 11;
-                    validChecksum = validChecksum == 10 ? 0 : validChecksum;
-                    if (checksum != validChecksum)
+                    if (!this.IsValidChecksum(currentFieldValue))
                     {
                         return ReturnError(validationContext);
                     }
@@ -71,10 +64,23 @@ namespace Egn.Validator
             return new ValidationResult(message, new[] { validationContext.MemberName });
         }
 
+        private bool IsValidChecksum(string ssn)
+        {
+            var checksum = int.Parse(ssn.Substring(9, 1));
+            var ssnSum = 0;
+            for (int i = 0; i < 9; i++)
+            {
+                ssnSum += int.Parse(ssn.Substring(i, 1)) * _weights[i];
+            }
+            var validChecksum = ssnSum % 11;
+            validChecksum = validChecksum == 10 ? 0 : validChecksum;
+            return checksum == validChecksum;
+        }
+
         private bool CheckDate(int day, int month, int year)
         {
             DateTime _date;
-            return DateTime.TryParseExact($"{day}.{month}.{year}", "dd.M.yy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out _date) && _date < DateTime.Now;
+            return DateTime.TryParseExact($"{day}.{month}.{year}", "d.M.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out _date) && _date < DateTime.Now;
         }
     }
 }

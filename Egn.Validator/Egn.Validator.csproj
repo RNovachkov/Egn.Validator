@@ -11,7 +11,7 @@
 with one static method Egn.isValid(string egn) and one ValidationAttribute [EGN]</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>Bulgaria, Bulgarian, Identification, Number, Personal, Attribute, Egn</PackageTags>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/RNovachkov/Egn.Validator.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -36,42 +37,49 @@ namespace Egn.Validator
             var day = int.Parse(egn.Substring(4, 2));
             if (month > 40)
             {
-                if (!Egn.CheckDate(day, month - 40, year))
-                {
-                    return false;
-                }
+                month -= 40;
+                year += 2000;
             }
             else if (month > 20)
             {
-                if (!Egn.CheckDate(day, month - 20, year))
-                {
-                    return false;
-                }
+                month -= 20;
+                year += 1800;
             }
-            else if (!Egn.CheckDate(day, month, year))
+            else
+            {
+                year += 1900;
+            }
+
+            if (!CheckDate(day, month, year))
             {
                 return false;
             }
 
-            var checksum = int.Parse(egn.Substring(9, 1));
-            var egnSum = 0;
-            for (int i = 0; i < 9; i++)
-            {
-                egnSum += int.Parse(egn.Substring(i, 1)) * Egn.weights[i];
-            }
-            var validChecksum = egnSum % 11;
-            validChecksum = validChecksum == 10 ? 0 : validChecksum;
-            if (checksum != validChecksum)
+            if (!IsValidChecksum(egn))
             {
                 return false;
             }
+
             return true;
+        }
+
+        private static bool IsValidChecksum(string ssn)
+        {
+            var checksum = int.Parse(ssn.Substring(9, 1));
+            var ssnSum = 0;
+            for (int i = 0; i < 9; i++)
+            {
+                ssnSum += int.Parse(ssn.Substring(i, 1)) * weights[i];
+            }
+            var validChecksum = ssnSum % 11;
+            validChecksum = validChecksum == 10 ? 0 : validChecksum;
+            return checksum == validChecksum;
         }
 
         private static bool CheckDate(int day, int month, int year)
         {
             DateTime _date;
-            return DateTime.TryParseExact($"{day}.{month}.{year}", "dd.M.yy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out _date) && _date < DateTime.Now;
+            return DateTime.TryParseExact($"{day}.{month}.{year}", "d.M.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out _date) && _date < DateTime.Now;
         }
     }
 }
