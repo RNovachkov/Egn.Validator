@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Egn.Validator", "Egn.Validator\Egn.Validator.csproj", "{C59D7850-BAA5-4439-9917-779BCEE91A64}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Egn.Validator.Tests", "Egn.Validator.Tests\Egn.Validator.Tests.csproj", "{01D70592-0469-44C9-91A5-E18C45C2CC90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C59D7850-BAA5-4439-9917-779BCEE91A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C59D7850-BAA5-4439-9917-779BCEE91A64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C59D7850-BAA5-4439-9917-779BCEE91A64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01D70592-0469-44C9-91A5-E18C45C2CC90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01D70592-0469-44C9-91A5-E18C45C2CC90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01D70592-0469-44C9-91A5-E18C45C2CC90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01D70592-0469-44C9-91A5-E18C45C2CC90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
