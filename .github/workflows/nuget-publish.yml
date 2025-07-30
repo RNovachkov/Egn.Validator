@@ -2,7 +2,7 @@ name: Build and Publish to NuGet (Auto-Version)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ publish ]
     paths-ignore:
       - '**.md'
       - '.gitignore'
@@ -41,6 +41,15 @@ jobs:
     
     - name: Pack with Version
       run: dotnet pack --configuration Release --no-build --output ./artifacts -p:PackageVersion=${{ steps.version.outputs.version }}
+
+    - name: Check if version exists
+      id: version_check
+      run: |
+        if dotnet nuget search YourPackage.Name --exact-match | grep -q "${{ steps.version.outputs.version }}"; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
     
     - name: Publish to NuGet
       run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
