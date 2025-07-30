@@ -29,16 +29,24 @@ jobs:
     
     - name: Test
       run: dotnet test --no-build --verbosity normal --configuration Release
-    
-    - name: Pack with Version
-      run: dotnet pack --configuration Release --no-build --output ./artifacts -p:PackageVersion=${{ steps.version.outputs.version }}
 
     - name: Publish to NuGet
       run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+    - name: Get Package Version for Tagging
+      id: get_version
+      run: |
+        # Extract version from the created package filename
+        PACKAGE_FILE=$(ls ./artifacts/*.nupkg | head -n 1)
+        FILENAME=$(basename "$PACKAGE_FILE" .nupkg)
+        # Extract version (assumes format: PackageName.Version.nupkg)
+        VERSION=$(echo "$FILENAME" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?)
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Extracted version: $VERSION"
     
     - name: Create Git Tag
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git tag "v${{ steps.version.outputs.version }}"
-        git push origin "v${{ steps.version.outputs.version }}"
+        git tag "v${{ steps.get_version.outputs.version }}"
+        git push origin "v${{ steps.get_version.outputs.version }}"
