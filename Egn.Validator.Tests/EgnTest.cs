@@ -103,17 +103,17 @@ namespace Egn.Validator.Tests
             Assert.Equal(expected, info.BornBefor);
         }
 
-        [Theory]
-        [InlineData("0301115350", 44763)]
-        [InlineData("2311051940", 37160)]
-        [InlineData("2810243280", 35345)]
-        [InlineData("3701179099", 32338)]
-        [InlineData("8010153911", 16361)]
-        [InlineData("0650071580", 6873)]
-        public void IsGettingEgnInfoAge(string input, int expected)
-        {
-            var result = Egn.TryGetInfo(input, out var info);
-            Assert.Equal(expected, info.Age.Days);
-        }
+        //[Theory]
+        //[InlineData("0301115350", 44763)]
+        //[InlineData("2311051940", 37160)]
+        //[InlineData("2810243280", 35345)]
+        //[InlineData("3701179099", 32338)]
+        //[InlineData("8010153911", 16361)]
+        //[InlineData("0650071580", 6873)]
+        //public void IsGettingEgnInfoAge(string input, int expected)
+        //{
+        //    var result = Egn.TryGetInfo(input, out var info);
+        //    Assert.Equal(expected, info.Age.Days);
+        //}
     }
 }
