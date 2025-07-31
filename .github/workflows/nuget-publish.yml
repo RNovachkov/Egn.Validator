@@ -24,18 +24,31 @@ jobs:
     - name: Get Version from .csproj
       id: get_version
       run: |
-        # Read version directly from .csproj file
-        VERSION=$(grep -oP '<Version>\K[^<]+' *.csproj | head -n 1)
+        echo "Looking for .csproj files..."
+        find . -name "Egn.Validator.csproj" -type f
         
-        # If Version tag not found, try VersionPrefix
-        if [ -z "$VERSION" ]; then
-          VERSION=$(grep -oP '<VersionPrefix>\K[^<]+' *.csproj | head -n 1)
-        fi
+        # Find the .csproj file (prioritize root directory)
+        CSPROJ_FILE=$(find . -name "Egn.Validator.csproj" -type f | head -n 1)
         
-        # Final fallback
-        if [ -z "$VERSION" ]; then
+        if [ -z "$CSPROJ_FILE" ]; then
+          echo "Error: No Egn.Validator.csproj file found"
           VERSION="1.0.0"
-          echo "Warning: No version found in .csproj, using default $VERSION"
+        else
+          echo "Using .csproj file: $CSPROJ_FILE"
+          
+          # Read version directly from the found .csproj file
+          VERSION=$(grep -oP '<Version>\K[^<]+' "$CSPROJ_FILE" | head -n 1)
+          
+          # If Version tag not found, try VersionPrefix
+          if [ -z "$VERSION" ]; then
+            VERSION=$(grep -oP '<VersionPrefix>\K[^<]+' "$CSPROJ_FILE" | head -n 1)
+          fi
+          
+          # Final fallback
+          if [ -z "$VERSION" ]; then
+            VERSION="1.0.0"
+            echo "Warning: No version found in $CSPROJ_FILE, using default $VERSION"
+          fi
         fi
         
         echo "version=$VERSION" >> $GITHUB_OUTPUT
