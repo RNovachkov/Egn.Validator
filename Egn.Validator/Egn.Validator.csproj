@@ -15,7 +15,7 @@ with one static method Egn.isValid(string egn) and one ValidationAttribute [EGN]
     <RepositoryUrl>https://github.com/RNovachkov/Egn.Validator.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>1.0.2</Version>
+    <Version>1.1.0</Version>
     <PackageIcon>Bulgarian.Egn.Validator.png</PackageIcon>
   </PropertyGroup>
 

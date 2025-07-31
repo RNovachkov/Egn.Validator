@@ -8,9 +8,13 @@ You can find the information, about how the validation is processed in [Wikipedi
 
 ##### Basic usege:
 - As method -> **bool isValid = Egn.isValid({the Personal id you want to validate in string});**
+- As method -> **bool hasInfo = Egn.TryGetInfo({the Personal id you want to validate in string}, out EgnInfo? info);**	
 - As ValidationAttribute -> \
 	  **[EGN]**\
 	  **public string personalId { get; set; }**\
 	or\
 	  **[EGN(ErrorMessage="Your error message")]**\
 	  **public string personalId { get; set; }**
+
+
+EgnInfo contains information about gender(byte), how much people from that gender are born befor that in that day(int), region(region code, name in bulgarian, and key for translation), birthday(DateOnly) and age(TimeSpan)

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Egn.Validator.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -32,6 +34,54 @@ namespace Egn.Validator
                 return false;
             }
 
+            var (year, month, day) = getDate(egn);
+
+            if (!CheckDate(day, month, year))
+            {
+                return false;
+            }
+
+            if (!IsValidChecksum(egn))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool TryGetInfo(string egn, out EgnInfo? value)
+        {
+            if (!isValid(egn))
+            {
+                value = null;
+                return false;
+            }
+
+            value = new EgnInfo();
+
+            var (year, month, day) = getDate(egn);
+            value.Birthday = new DateOnly(year, month, day);
+            value.Age = DateTime.Now - value.Birthday.ToDateTime(TimeOnly.MinValue);
+
+            var gender = int.Parse(egn.Substring(8, 1)) % 2;
+            value.Gender = gender == 0 ? (byte)0 : (byte)1;
+
+            var regionCode = int.Parse(egn.Substring(6, 3));
+            List<Region> regions = Regions.List.ToList() ?? new List<Region>();
+            regions.Sort((p1, p2) => p1.Code.CompareTo(p2.Code));
+            value.Region = regions.FirstOrDefault(r => r.Code >= regionCode) ?? Regions.List.Last();
+            regions.Sort((p1, p2) => p2.Code.CompareTo(p1.Code));
+            var minRegionCode = regions.FirstOrDefault(r => r.Code <= regionCode)?.Code;
+            if (minRegionCode is not null)
+            {
+                value.BornBefor = (regionCode - (int)minRegionCode - 1) / 2;
+            }
+
+            return true;
+        }
+
+        private static (int year, int month, int day) getDate(string egn)
+        {
             var year = int.Parse(egn.Substring(0, 2));
             var month = int.Parse(egn.Substring(2, 2));
             var day = int.Parse(egn.Substring(4, 2));
@@ -49,18 +99,7 @@ namespace Egn.Validator
             {
                 year += 1900;
             }
-
-            if (!CheckDate(day, month, year))
-            {
-                return false;
-            }
-
-            if (!IsValidChecksum(egn))
-            {
-                return false;
-            }
-
-            return true;
+            return (year, month, day);
         }
 
         private static bool IsValidChecksum(string ssn)
