@@ -26,14 +26,18 @@ jobs:
       run: |
         # Read version directly from .csproj file
         VERSION=$(grep -oP '<Version>\K[^<]+' *.csproj | head -n 1)
+        
+        # If Version tag not found, try VersionPrefix
         if [ -z "$VERSION" ]; then
-          # Fallback to VersionPrefix if Version tag not found
           VERSION=$(grep -oP '<VersionPrefix>\K[^<]+' *.csproj | head -n 1)
         fi
+        
+        # Final fallback
         if [ -z "$VERSION" ]; then
           VERSION="1.0.0"
           echo "Warning: No version found in .csproj, using default $VERSION"
         fi
+        
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "Project version: $VERSION"
     
