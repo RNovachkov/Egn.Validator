@@ -26,7 +26,7 @@ namespace Egn.Validator.Tests
         [InlineData("", false)] // empty string
         [InlineData("801015391", false)] // 9 digits
         [InlineData("80101539111", false)] // 11 digits
-        [InlineData("9948094663", false)] // invalid date
+        [InlineData("9942304663", false)] // invalid date
         [InlineData("8010153912", false)] // invalid checksum
         [InlineData("0301115350", true)]
         [InlineData("2311051940", true)]
