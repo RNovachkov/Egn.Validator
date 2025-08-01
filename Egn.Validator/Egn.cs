@@ -74,9 +74,125 @@ namespace Egn.Validator
             var minRegionCode = regions.FirstOrDefault(r => r.Code <= regionCode)?.Code;
             if (minRegionCode is not null)
             {
-                value.BornBefor = (regionCode - (int)minRegionCode - 1) / 2;
+                value.BornBefore = (regionCode - (int)minRegionCode - 1) / 2;
             }
 
+            return true;
+        }
+
+        /// <summary>
+        /// Generates a Bulgarian EGN (Единен граждански номер) number
+        /// </summary>
+        /// <param name="day">Day of birth (1-31, 0 for random)</param>
+        /// <param name="mon">Month of birth (1-12, 0 for random)</param>
+        /// <param name="year">Year of birth (1800-2099, 0 for random)</param>
+        /// <param name="gender">Sex (1 = male, 2 = female, 0 = random)</param>
+        /// <param name="region">Region key (null/empty for random)</param>
+        /// <returns>Generated EGN string or throw if generation failed</returns>
+        public static string Generate(uint day = 0, uint mon = 0, uint year = 0, byte gender = 0, string? region = null)
+        {
+            if (!hasValidDateParameters(day,mon,year))
+            {
+                throw new ArgumentException("One or more invalid date parameters.");
+            }
+
+            bool started = false;
+
+            uint gDay = 0;
+            uint gMon = 0;
+            uint gYear = 0;
+
+            do
+            {
+                started = true;
+
+                gYear = year == 0 ? (uint)_random.Next(1800, 2100) : year;
+                gMon = mon == 0 ? (uint)_random.Next(1, 13) : mon;
+                gDay = day == 0 ? (uint)_random.Next(1, 32) : day;
+
+            } while (!(hasValidDateParameters(gDay, gMon, gYear) && started));
+
+
+            int cent = (int)gYear - ((int)gYear % 100);
+
+            switch (cent)
+            {
+                case 1800:
+                    gMon += 20;
+                    break;
+                case 2000:
+                    gMon += 40;
+                    break;
+            }
+
+
+            int? gRegion = region == null ? null : Regions.List.SingleOrDefault(r => r.Key == region).Code;
+            if (gRegion == null)
+            {
+                var index = _random.Next(1, Regions.List.Length);
+                gRegion = Regions.List[index].Code;
+            }
+
+
+            if (gender == 1 && (gRegion % 2 != 0))
+                gRegion--;
+
+            if (gender == 2 && (gRegion % 2 == 0))
+                gRegion++;
+
+
+            string egn = $"{(gYear - cent):D2}{gMon:D2}{gDay:D2}{gRegion:D3}";
+
+
+            int egnsum = 0;
+            for (int i = 0; i < 9; i++)
+            {
+                int digit = int.Parse(egn[i].ToString());
+                egnsum += digit * weights[i];
+            }
+
+            int validChecksum = egnsum % 11;
+            if (validChecksum == 10)
+                validChecksum = 0;
+
+            egn += validChecksum.ToString();
+
+            return egn;
+        }
+
+        private static readonly Random _random = new();
+
+        private static bool hasValidDateParameters(uint day = 0, uint mon = 0, uint year = 0)
+        {
+            if (mon > 12)
+            {
+                return false;
+            }
+
+            if (new uint[] { 2, 4, 6, 9, 11 }.Contains(mon) && day > 30)
+            {
+                return false;
+            }
+
+            if (day > 31)
+            {
+                return false;
+            }
+
+            if (mon == 2 && year % 4 != 0 && day > 28)
+            {
+                return false;
+            }
+
+            if (mon == 2 && day > 29)
+            {
+                return false;
+            }
+
+            if ((year < 1800 || year > 2099) && year != 0)
+            {
+                return false;
+            }
             return true;
         }
 
@@ -117,8 +233,7 @@ namespace Egn.Validator
 
         private static bool CheckDate(int day, int month, int year)
         {
-            DateTime _date;
-            return DateTime.TryParseExact($"{day}.{month}.{year}", "d.M.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out _date) && _date < DateTime.Now;
+            return DateTime.TryParseExact($"{day}.{month}.{year}", "d.M.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var _date);
         }
     }
 }

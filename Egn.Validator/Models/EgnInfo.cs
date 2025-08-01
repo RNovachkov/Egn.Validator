@@ -7,7 +7,7 @@
         /// </summary>
         public byte Gender { get; set; }
         public Region Region { get; set; }
-        public int BornBefor { get; set; }
+        public int BornBefore { get; set; }
         public TimeSpan Age { get; set; }
         public DateOnly Birthday { get; set; }
     }
