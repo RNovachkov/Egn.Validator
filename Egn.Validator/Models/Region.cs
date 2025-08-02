@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Egn.Validator.Models
+﻿namespace Egn.Validator.Models
 {
     public class Region
     {

@@ -1,5 +1,3 @@
-using Egn.Validator;
-
 namespace Egn.Validator.Tests
 {
     public class EgnTest

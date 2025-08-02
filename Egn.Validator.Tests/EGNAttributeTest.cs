@@ -1,5 +1,4 @@
-﻿using Egn.Validator;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Egn.Validator.Tests
 {
